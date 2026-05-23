@@ -96,9 +96,24 @@ export default function ReportPage() {
         borderBottom: '1px solid var(--border)', padding: '48px 0 40px',
       }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ marginBottom: 8 }}>
+          <div style={{ marginBottom: 8, display: 'flex', gap: 12 }} className="no-print">
             <button className="btn-secondary" onClick={() => router.push('/')} style={{ padding: '8px 16px', fontSize: 13 }}>
               ← New Assessment
+            </button>
+            <button 
+              className="btn-primary animate-pulse-glow" 
+              onClick={() => window.print()} 
+              style={{ 
+                padding: '8px 20px', 
+                fontSize: 13, 
+                background: 'linear-gradient(135deg, #10b981, #06b6d4)', 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: 6,
+                fontWeight: 600
+              }}
+            >
+              📥 Download PDF Report
             </button>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginTop: 24 }}>
@@ -320,7 +335,7 @@ export default function ReportPage() {
           </div>
         )}
 
-        <div style={{ marginTop: 40, textAlign: 'center' }}>
+        <div style={{ marginTop: 40, textAlign: 'center' }} className="no-print">
           <button className="btn-primary" onClick={() => router.push('/')} style={{ marginRight: 12 }}>
             Take Another Assessment
           </button>

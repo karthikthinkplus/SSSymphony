@@ -80,13 +80,16 @@ export default function HomePage() {
             <span>🎯</span> NCERT-Aligned · Grades 5–10 · AI-Powered
           </div>
           <h1 style={{ fontSize: 56, fontWeight: 800, lineHeight: 1.15, marginBottom: 20 }}>
-            <span className="gradient-text">Symphony</span>
+            <span className="gradient-text">Adapti+ Learn</span>
           </h1>
           <h2 style={{ fontSize: 28, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 16 }}>
-            Adaptive Math Assessment Tool
+            Is Your Child Future-Ready for IIT-JEE?
           </h2>
-          <p style={{ fontSize: 16, color: 'var(--text-muted)', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
-            A diagnostic engine that adapts to every response — pinpointing your exact strengths,
+          <p style={{ fontSize: 20, color: 'var(--accent-primary)', maxWidth: 645, margin: '0 auto', lineHeight: 1.7, fontWeight: 700 }}>
+            Fix the 8th-Grade Gap, Prevent the 11th-Grade Crash.
+          </p>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', maxWidth: 520, margin: '16px auto 0', lineHeight: 1.6 }}>
+            Our adaptive AI-powered diagnostic engine pinpointing your child's exact strengths,
             gaps, and the root cause of every error across 5 learning dimensions.
           </p>
         </div>

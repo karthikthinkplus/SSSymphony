@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>🎓</span>
           <h1 style={{ fontSize: 28, fontWeight: 800, fontFamily: 'Outfit' }}>
-            <span className="gradient-text">Symphony</span> Admin
+            <span className="gradient-text">Adapti+ Learn</span> Admin
           </h1>
           <p style={{ color: 'var(--text-muted)', marginTop: 6, fontSize: 14 }}>Teacher & Administrator Portal</p>
         </div>

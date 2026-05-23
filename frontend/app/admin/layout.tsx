@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="admin-sidebar">
         <div style={{ padding: '28px 24px 20px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ fontSize: 20, fontWeight: 800, fontFamily: 'Outfit', marginBottom: 4 }}>
-            <span className="gradient-text">Symphony</span>
+            <span className="gradient-text">Adapti+ Learn</span>
           </div>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Admin Portal

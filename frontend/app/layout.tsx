@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Symphony — Adaptive Math Assessment',
+  title: 'Adapti+ Learn — Is Your Child Future-Ready for IIT-JEE?',
   description: 'AI-powered adaptive mathematics assessment for Indian school students (Grades 5–10), aligned to NCERT curriculum.',
   keywords: 'adaptive learning, mathematics, NCERT, IRT, cognitive diagnostic, India, school assessment',
 }

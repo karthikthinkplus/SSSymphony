@@ -117,7 +117,7 @@ export default function AssessmentPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 18, fontWeight: 800, fontFamily: 'Outfit', color: 'var(--accent-primary)' }}>Symphony</span>
+          <span style={{ fontSize: 18, fontWeight: 800, fontFamily: 'Outfit', color: 'var(--accent-primary)' }}>Adapti+ Learn</span>
           <span style={{ color: 'var(--border)', fontSize: 18 }}>|</span>
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
             {question.topic_area} → {question.skill_name}
