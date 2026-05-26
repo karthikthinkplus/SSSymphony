@@ -71,6 +71,16 @@ export interface ReportData {
   recommended_skills: Array<{ skill_id: string; skill_name: string; grade_level: string; ncert_ref: string }>
   started_at: string
   ended_at: string | null
+  guessed_count: number
+  guessed_pct: number
+  comprehension_error_count: number
+  comprehension_error_detected: boolean
+  avg_response_time_sec?: number
+  total_duration_sec?: number
+  slowest_question?: { question_number: number; time_sec: number; skill_name: string } | null
+  fastest_question?: { question_number: number; time_sec: number; skill_name: string } | null
+  response_timeline?: Array<{ question_number: number; skill_name: string; time_sec: number; is_correct: boolean; pace_category: string }>
+  pace_breakdown?: { rushed: number; optimal: number; deliberate: number }
 }
 
 export const sessionApi = {

@@ -183,6 +183,19 @@ def _get_prerequisite_skill(db: DBSession, skill_id: str) -> Optional[Skill]:
     return None
 
 
+def _parse_grade_level(grade_level_str: str, default: int = GRADE_MIN) -> int:
+    """Safely parse a grade_level string (which might be '7', '7-8', '5/6', etc.) into an int.
+    If it's a range or a list, returns the lower/first grade in the range.
+    """
+    if not grade_level_str:
+        return default
+    import re
+    match = re.search(r'\d+', str(grade_level_str))
+    if match:
+        return int(match.group())
+    return default
+
+
 def _grade_filter(grade: int):
     """Return a SQLAlchemy filter that matches skills whose grade_level contains `grade`.
 
@@ -432,11 +445,11 @@ def get_next_question(
                 engine_action = f"traverse_to_prereq_{prereq.skill_id}"
                 _log_traversal(
                     session, session.current_skill_id, session.current_grade,
-                    prereq.skill_id, int(prereq.grade_level or GRADE_MIN),
+                    prereq.skill_id, _parse_grade_level(prereq.grade_level, GRADE_MIN),
                     f"CDM:{trap_result.trap_type}"
                 )
                 session.current_skill_id = prereq.skill_id
-                session.current_grade = int(prereq.grade_level or GRADE_MIN)
+                session.current_grade = _parse_grade_level(prereq.grade_level, GRADE_MIN)
                 session.current_difficulty = "easy"
                 _add_visited_skill(session, prereq.skill_id)
                 session.consecutive_failures += 1
@@ -530,11 +543,11 @@ def get_next_question(
             engine_action = f"foundational_gap_traverse_{prereq.skill_id}"
             _log_traversal(
                 session, session.current_skill_id, session.current_grade,
-                prereq.skill_id, int(prereq.grade_level or GRADE_MIN),
+                prereq.skill_id, _parse_grade_level(prereq.grade_level, GRADE_MIN),
                 "BKT:FoundationalGap"
             )
             session.current_skill_id = prereq.skill_id
-            session.current_grade = max(int(prereq.grade_level or GRADE_MIN), GRADE_MIN)
+            session.current_grade = max(_parse_grade_level(prereq.grade_level, GRADE_MIN), GRADE_MIN)
             session.current_difficulty = "easy"
             _add_visited_skill(session, prereq.skill_id)
             session.consecutive_failures = 0
@@ -609,11 +622,11 @@ def get_next_question(
                 engine_action = f"cross_grade_traverse_{prereq.skill_id}"
                 _log_traversal(
                     session, session.current_skill_id, session.current_grade,
-                    prereq.skill_id, int(prereq.grade_level or GRADE_MIN),
+                    prereq.skill_id, _parse_grade_level(prereq.grade_level, GRADE_MIN),
                     "IRT:ConsecutiveFailuresAtEasy"
                 )
                 session.current_skill_id = prereq.skill_id
-                session.current_grade = max(int(prereq.grade_level or GRADE_MIN), GRADE_MIN)
+                session.current_grade = max(_parse_grade_level(prereq.grade_level, GRADE_MIN), GRADE_MIN)
                 session.current_difficulty = "easy"
                 _add_visited_skill(session, prereq.skill_id)
                 session.consecutive_failures = 0
@@ -655,18 +668,24 @@ def get_next_question(
                         db, target_skill.skill_id, session.current_grade,
                         "medium", _served_ids(session)
                     )
-            if q is None:
-                session.status = "completed"
-                session.ended_at = datetime.utcnow()
-                db.commit()
-                return None
-        session.current_skill_id = next_skill.skill_id
-        session.current_difficulty = "medium"
-        _add_visited_skill(session, next_skill.skill_id)
-        q = _fetch_question(
-            db, next_skill.skill_id, session.current_grade,
-            "medium", _served_ids(session)
-        )
+                    if q:
+                        _add_served(session, q.question_id)
+                        db.commit()
+                        return _question_to_schema(q, db, session)
+            
+            # If no review question could be fetched, or we already have enough questions, complete the session
+            session.status = "completed"
+            session.ended_at = datetime.utcnow()
+            db.commit()
+            return None
+        else:
+            session.current_skill_id = next_skill.skill_id
+            session.current_difficulty = "medium"
+            _add_visited_skill(session, next_skill.skill_id)
+            q = _fetch_question(
+                db, next_skill.skill_id, session.current_grade,
+                "medium", _served_ids(session)
+            )
 
     if q:
         _add_served(session, q.question_id)

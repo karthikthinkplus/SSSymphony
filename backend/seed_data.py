@@ -17,7 +17,7 @@ Base.metadata.create_all(bind=engine)
 XLSX_PATH = os.path.join(
     os.path.dirname(__file__),
     "..",
-    "Adaptive_Math_PnL_v4.xlsx",
+    "Adaptive_Math_PnL_Updated.xlsx",
 )
 
 if not os.path.exists(XLSX_PATH):

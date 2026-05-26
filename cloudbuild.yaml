@@ -1,0 +1,47 @@
+steps:
+  # --- Backend ---
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - -t
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/backend:$SHORT_SHA'
+      - ./backend
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/backend:$SHORT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - symphony-backend
+      - --image=asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/backend:$SHORT_SHA
+      - --region=asia-south1
+      - --platform=managed
+
+  # --- Frontend ---
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - --build-arg
+      - 'NEXT_PUBLIC_API_URL=https://symphony-backend-HASH-uc.a.run.app'
+      - -t
+      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA'
+      - ./frontend
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - symphony-frontend
+      - --image=asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA
+      - --region=asia-south1
+      - --platform=managed
+
+options:
+  logging: CLOUD_LOGGING_ONLY

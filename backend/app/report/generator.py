@@ -167,6 +167,81 @@ def generate_report(db: DBSession, session_id: str) -> Dict[str, Any]:
             pass
 
     # -----------------------------------------------------------------------
+    # 6b. Behavioral Insights & Comprehension Error Detection
+    # -----------------------------------------------------------------------
+    # Under 3 seconds (3000 ms) response time is flagged as rapid guessing
+    guessed_count = sum(1 for r in responses if r.response_time_ms is not None and r.response_time_ms < 3000)
+    guessed_pct = round((guessed_count / total_q * 100) if total_q > 0 else 0, 1)
+
+    # Comprehension error occurs if they fail word problem but solve twin, or if Reading_Error is marked
+    comprehension_error_count = sum(1 for r in responses if (r.twin_probe and r.is_correct) or r.trap_type == "Reading_Error")
+    comprehension_error_detected = comprehension_error_count > 0
+
+    # -----------------------------------------------------------------------
+    # 6c. Detailed Timing & Speed Diagnostics
+    # -----------------------------------------------------------------------
+    response_timeline = []
+    total_time_ms = 0
+    valid_times_count = 0
+    slowest_q = None
+    fastest_q = None
+    
+    pace_breakdown = {"rushed": 0, "optimal": 0, "deliberate": 0}
+    
+    for idx, r in enumerate(responses):
+        q = db.query(Question).filter(Question.question_id == r.question_id).first()
+        skill_name = "Unknown Skill"
+        if q:
+            skill = db.query(Skill).filter(Skill.skill_id == q.primary_skill_id).first()
+            if skill:
+                skill_name = skill.skill_name
+                
+        t_ms = r.response_time_ms or 0
+        total_time_ms += t_ms
+        if t_ms > 0:
+            valid_times_count += 1
+            
+        time_sec = round(t_ms / 1000.0, 1)
+        
+        # Categorize pacing: Rushed (< 3s), Optimal (3s to 45s), Deliberate (> 45s)
+        if t_ms < 3000:
+            pace_category = "Rushed"
+            pace_breakdown["rushed"] += 1
+        elif t_ms <= 45000:
+            pace_category = "Optimal"
+            pace_breakdown["optimal"] += 1
+        else:
+            pace_category = "Deliberate"
+            pace_breakdown["deliberate"] += 1
+            
+        response_timeline.append({
+            "question_number": idx + 1,
+            "skill_name": skill_name,
+            "time_sec": time_sec,
+            "is_correct": r.is_correct,
+            "pace_category": pace_category,
+        })
+        
+        if t_ms > 0:
+            if slowest_q is None or t_ms > slowest_q["time_ms"]:
+                slowest_q = {
+                    "question_number": idx + 1,
+                    "time_ms": t_ms,
+                    "time_sec": time_sec,
+                    "skill_name": skill_name
+                }
+            if fastest_q is None or t_ms < fastest_q["time_ms"]:
+                fastest_q = {
+                    "question_number": idx + 1,
+                    "time_ms": t_ms,
+                    "time_sec": time_sec,
+                    "skill_name": skill_name
+                }
+                
+    avg_response_time_sec = round((total_time_ms / valid_times_count / 1000.0) if valid_times_count > 0 else 0, 1)
+    total_duration_sec = round(total_time_ms / 1000.0, 1)
+
+    # -----------------------------------------------------------------------
     # 7. Personalised Narrative
     # -----------------------------------------------------------------------
     narrative = _generate_narrative(
@@ -180,6 +255,10 @@ def generate_report(db: DBSession, session_id: str) -> Dict[str, Any]:
         reading_gap_pct=reading_gap_pct,
         gap_chain=gap_chain,
         skill_mastery=skill_mastery,
+        guessed_count=guessed_count,
+        guessed_pct=guessed_pct,
+        comprehension_error_count=comprehension_error_count,
+        comprehension_error_detected=comprehension_error_detected,
     )
 
     # -----------------------------------------------------------------------
@@ -215,6 +294,16 @@ def generate_report(db: DBSession, session_id: str) -> Dict[str, Any]:
         "recommended_skills": recommended,
         "started_at": sess.started_at.isoformat() if sess.started_at else None,
         "ended_at": sess.ended_at.isoformat() if sess.ended_at else None,
+        "guessed_count": guessed_count,
+        "guessed_pct": guessed_pct,
+        "comprehension_error_count": comprehension_error_count,
+        "comprehension_error_detected": comprehension_error_detected,
+        "avg_response_time_sec": avg_response_time_sec,
+        "total_duration_sec": total_duration_sec,
+        "slowest_question": slowest_q,
+        "fastest_question": fastest_q,
+        "response_timeline": response_timeline,
+        "pace_breakdown": pace_breakdown,
     }
 
 
@@ -229,6 +318,10 @@ def _generate_narrative(
     reading_gap_pct: float,
     gap_chain: List[Dict],
     skill_mastery: List[Dict],
+    guessed_count: int,
+    guessed_pct: float,
+    comprehension_error_count: int,
+    comprehension_error_detected: bool,
 ) -> str:
     parts = []
 
@@ -298,5 +391,34 @@ def _generate_narrative(
             f"{student_name} has demonstrated mastery in {mastered_count} skill(s) "
             f"and should focus remediation on the {gap_count} identified gap area(s) below."
         )
+
+    # Behavioral and Comprehension insights based on response time and twin probes
+    behavioral_insights = []
+    if guessed_count > 0:
+        behavioral_insights.append(
+            f"In terms of test-taking behavior, {student_name} was flagged for rapid guessing on {guessed_count} question(s) "
+            f"({guessed_pct:.1f}% of total responses), where answers were submitted in under 3 seconds. This suggest they "
+            f"likely guessed these questions without thoroughly reading the prompts."
+        )
+    else:
+        behavioral_insights.append(
+            f"Analysis of pacing indicates that {student_name} demonstrated thoughtful, deliberate decision-making, with "
+            f"no responses flagged as rapid guesses (under 3 seconds)."
+        )
+
+    if comprehension_error_detected:
+        behavioral_insights.append(
+            f"Additionally, the engine successfully isolated {comprehension_error_count} instances where "
+            f"{student_name} made a reading/comprehension error. In these cases, the student failed the word problem "
+            f"format but successfully solved the mathematical equation twin. This clearly defines a language comprehension "
+            f"error rather than a mathematical core deficit."
+        )
+    else:
+        behavioral_insights.append(
+            f"Furthermore, there were no verified comprehension errors where the student failed a word problem "
+            f"but solved its identical equation twin, suggesting consistent decoding across verbal and symbol formats."
+        )
+
+    parts.append(" ".join(behavioral_insights))
 
     return " ".join(parts)

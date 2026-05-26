@@ -335,6 +335,220 @@ export default function ReportPage() {
           </div>
         )}
 
+        {/* Behavioral & Pacing Diagnostics */}
+        <div className="glass-card animate-fade-in-up" style={{ padding: 28, marginTop: 28 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, fontFamily: 'Outfit' }}>⚡ Engagement & Pacing Diagnostics</h2>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 24 }}>Deep-dive analysis of response timing, pacing patterns, and linguistic decoding verified metrics.</p>
+
+          {/* Quick Metrics Row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+            <div style={{ padding: '16px 20px', borderRadius: 12, background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Average Pace</div>
+              <div style={{ fontSize: 24, fontWeight: 900, fontFamily: 'Outfit', color: 'var(--accent-primary)', marginTop: 4 }}>
+                {report.avg_response_time_sec ?? 'N/A'}s <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-muted)' }}>/ q</span>
+              </div>
+            </div>
+            <div style={{ padding: '16px 20px', borderRadius: 12, background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Active Time</div>
+              <div style={{ fontSize: 24, fontWeight: 900, fontFamily: 'Outfit', color: 'var(--text-primary)', marginTop: 4 }}>
+                {report.total_duration_sec ? (
+                  Math.floor(report.total_duration_sec / 60) > 0 
+                    ? `${Math.floor(report.total_duration_sec / 60)}m ${Math.round(report.total_duration_sec % 60)}s`
+                    : `${Math.round(report.total_duration_sec)}s`
+                ) : 'N/A'}
+              </div>
+            </div>
+            <div style={{ padding: '16px 20px', borderRadius: 12, background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Slowest Response</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginTop: 6, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }} title={report.slowest_question?.skill_name}>
+                {report.slowest_question ? `Q${report.slowest_question.question_number} (${report.slowest_question.time_sec}s)` : 'N/A'}
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {report.slowest_question?.skill_name ?? ''}
+              </div>
+            </div>
+            <div style={{ padding: '16px 20px', borderRadius: 12, background: 'rgba(99, 102, 241, 0.05)', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fastest Response</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginTop: 6, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }} title={report.fastest_question?.skill_name}>
+                {report.fastest_question ? `Q${report.fastest_question.question_number} (${report.fastest_question.time_sec}s)` : 'N/A'}
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {report.fastest_question?.skill_name ?? ''}
+              </div>
+            </div>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: report.comprehension_error_detected ? '1fr 1fr' : '1fr',
+            gap: 20,
+            marginBottom: 28
+          }}>
+            {/* Rapid Guessing Card */}
+            <div style={{
+              padding: '24px', borderRadius: 12,
+              background: report.guessed_count > 0 ? 'rgba(239, 68, 68, 0.04)' : 'rgba(16, 185, 129, 0.04)',
+              border: `1px solid ${report.guessed_count > 0 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                <span style={{ fontSize: 20 }}>⏱️</span>
+                <span style={{ fontWeight: 700, fontSize: 15, fontFamily: 'Outfit' }}>Response Speed Analysis</span>
+              </div>
+              <div style={{ fontSize: 28, fontWeight: 900, fontFamily: 'Outfit', color: report.guessed_count > 0 ? '#ef4444' : '#10b981', marginBottom: 6 }}>
+                {report.guessed_count} <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-muted)' }}>question(s) rapid-guessed</span>
+              </div>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
+                {report.guessed_count > 0 ? (
+                  <>
+                    <strong>{report.guessed_pct}%</strong> of responses were answered in less than 3 seconds. This speed indicates a high probability of rapid guessing without fully reading the question.
+                  </>
+                ) : (
+                  <>
+                    All answers were submitted after deliberate reading (no rapid responses under 3 seconds). This demonstrates strong focus and test-taking discipline.
+                  </>
+                )}
+              </p>
+            </div>
+
+            {/* Comprehension Error Card */}
+            {report.comprehension_error_detected && (
+              <div style={{
+                padding: '24px', borderRadius: 12,
+                background: 'rgba(245, 158, 11, 0.04)',
+                border: '1px solid rgba(245, 158, 11, 0.2)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                  <span style={{ fontSize: 20 }}>📖</span>
+                  <span style={{ fontWeight: 700, fontSize: 15, fontFamily: 'Outfit' }}>Comprehension Error Verification</span>
+                </div>
+                <div style={{ fontSize: 28, fontWeight: 900, fontFamily: 'Outfit', color: '#f59e0b', marginBottom: 6 }}>
+                  Comprehension Gap Detected
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
+                  Isolated <strong>{report.comprehension_error_count}</strong> instance(s) where the student failed a contextual word problem but successfully solved its exact mathematical equation twin. This confirms a language decoding/reading challenge rather than a mathematical core gap.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Unified Pacing Proportions */}
+          {report.pace_breakdown && (
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: 24, marginBottom: 28 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 8, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>Pacing Distribution</h3>
+              {(() => {
+                const pace = report.pace_breakdown;
+                const total = (pace.rushed + pace.optimal + pace.deliberate) || 1;
+                const rushedPct = Math.round((pace.rushed / total) * 100);
+                const optimalPct = Math.round((pace.optimal / total) * 100);
+                const deliberatePct = Math.round((pace.deliberate / total) * 100);
+                return (
+                  <>
+                    <div style={{ height: 10, borderRadius: 5, overflow: 'hidden', display: 'flex', background: 'rgba(255,255,255,0.05)', margin: '12px 0 16px' }}>
+                      {pace.rushed > 0 && <div style={{ width: `${rushedPct}%`, background: '#ef4444' }} title={`Rushed: ${rushedPct}%`} />}
+                      {pace.optimal > 0 && <div style={{ width: `${optimalPct}%`, background: '#10b981' }} title={`Optimal: ${optimalPct}%`} />}
+                      {pace.deliberate > 0 && <div style={{ width: `${deliberatePct}%`, background: '#3b82f6' }} title={`Deliberate: ${deliberatePct}%`} />}
+                    </div>
+                    <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ef4444' }} />
+                        <strong>Rushed:</strong> {pace.rushed} q ({rushedPct}%)
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#10b981' }} />
+                        <strong>Optimal:</strong> {pace.optimal} q ({optimalPct}%)
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#3b82f6' }} />
+                        <strong>Deliberate/Deep Thought:</strong> {pace.deliberate} q ({deliberatePct}%)
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Response Timeline Scroll area */}
+          {report.response_timeline && report.response_timeline.length > 0 && (
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: 24 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>Response Timeline & Pacing per Question</h3>
+              <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollbarWidth: 'thin' }}>
+                {report.response_timeline.map((item) => {
+                  const badgeColor = item.pace_category === 'Rushed' ? '#ef4444' : item.pace_category === 'Optimal' ? '#10b981' : '#3b82f6';
+                  const badgeBg = item.pace_category === 'Rushed' ? 'rgba(239, 68, 68, 0.12)' : item.pace_category === 'Optimal' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)';
+                  return (
+                    <div 
+                      key={item.question_number} 
+                      style={{ 
+                        flexShrink: 0, 
+                        width: 140, 
+                        padding: 16, 
+                        borderRadius: 12, 
+                        background: 'rgba(255,255,255,0.02)', 
+                        border: '1px solid var(--border)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: 10 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}>Q{item.question_number}</span>
+                        <span style={{ 
+                          width: 18, 
+                          height: 18, 
+                          borderRadius: '50%', 
+                          background: item.is_correct ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                          color: item.is_correct ? '#10b981' : '#ef4444',
+                          fontSize: 10,
+                          fontWeight: 800,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          {item.is_correct ? '✓' : '✗'}
+                        </span>
+                      </div>
+                      
+                      <div style={{ fontSize: 22, fontWeight: 900, fontFamily: 'Outfit', color: 'var(--text-primary)', margin: '8px 0' }}>
+                        {item.time_sec}s
+                      </div>
+                      
+                      <div style={{ 
+                        fontSize: 10, 
+                        fontWeight: 600, 
+                        padding: '3px 8px', 
+                        borderRadius: 99, 
+                        color: badgeColor, 
+                        background: badgeBg, 
+                        marginBottom: 10,
+                        textTransform: 'uppercase'
+                      }}>
+                        {item.pace_category}
+                      </div>
+
+                      <div style={{ 
+                        fontSize: 10, 
+                        color: 'var(--text-muted)', 
+                        textOverflow: 'ellipsis', 
+                        overflow: 'hidden', 
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: 1.3,
+                        height: 26
+                      }} title={item.skill_name}>
+                        {item.skill_name}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
         <div style={{ marginTop: 40, textAlign: 'center' }} className="no-print">
           <button className="btn-primary" onClick={() => router.push('/')} style={{ marginRight: 12 }}>
             Take Another Assessment

@@ -38,15 +38,22 @@ def bkt_update(prior: float, is_correct: bool) -> float:
         # P(L | correct) = P(L)*P(1-S) / [P(L)*(1-S) + (1-P(L))*P(G)]
         numerator = prior * (1.0 - P_SLIP)
         denominator = numerator + (1.0 - prior) * P_GUESS
+        posterior = numerator / denominator if denominator > 0 else prior
+        
+        # Student answered correctly, so apply learning transition (chance of transition to learned state)
+        new_p = posterior + (1.0 - posterior) * P_TRANSIT
+        # On a correct answer, mastery must increase or stay the same
+        new_p = max(prior, new_p)
     else:
         # P(L | incorrect) = P(L)*P(S) / [P(L)*P(S) + (1-P(L))*(1-P(G))]
         numerator = prior * P_SLIP
         denominator = numerator + (1.0 - prior) * (1.0 - P_GUESS)
+        posterior = numerator / denominator if denominator > 0 else prior
+        
+        # Student answered incorrectly: they did NOT transition to the learned state,
+        # so we do NOT apply P_TRANSIT. Mastery must decrease or stay the same.
+        new_p = min(prior, posterior)
 
-    posterior = numerator / denominator if denominator > 0 else prior
-
-    # Apply learning transition
-    new_p = posterior + (1.0 - posterior) * P_TRANSIT
     return float(max(0.001, min(0.999, new_p)))
 
 

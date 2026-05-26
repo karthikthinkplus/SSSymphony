@@ -1,5 +1,5 @@
 """
-Reset question bank and re-import EXCLUSIVELY from Adaptive_Math_PnL_v4.xlsx.
+Reset question bank and re-import EXCLUSIVELY from Adaptive_Math_PnL_Updated.xlsx.
 Clears: questions, skills, knowledge_graph, q_matrix, answer_traps,
         question_dimensions (and BKT state, sessions, responses, students
         since they reference old question IDs).
@@ -16,7 +16,7 @@ from app.models import (
 )
 from app.importer.excel_parser import import_excel
 
-XLSX_PATH = os.path.join(os.path.dirname(__file__), "..", "Adaptive_Math_PnL_v4.xlsx")
+XLSX_PATH = os.path.join(os.path.dirname(__file__), "..", "Adaptive_Math_PnL_Updated.xlsx")
 
 if not os.path.exists(XLSX_PATH):
     print(f"ERROR: File not found: {XLSX_PATH}")

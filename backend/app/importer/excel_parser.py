@@ -228,7 +228,7 @@ def import_excel(file_path: str, db: DBSession) -> Dict[str, Any]:
             db.query(AnswerTrap)
             .filter(AnswerTrap.question_id == qid, AnswerTrap.option_label == opt)
             .first()
-        )
+        )   # 
         if existing:
             trap = existing
         else:

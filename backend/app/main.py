@@ -2,22 +2,24 @@
 FastAPI application entry point.
 """
 
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base, SessionLocal
 from app.models import AdminUser
 from app.routers import session as session_router, admin as admin_router
-import hashlib
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def _hash_password(password: str) -> str:
-    """Simple SHA-256 hash for admin password (production should use bcrypt)."""
-    return hashlib.sha256(password.encode()).hexdigest()
+    return pwd_context.hash(password)
 
 
 def _verify_password(plain: str, hashed: str) -> bool:
-    return hashlib.sha256(plain.encode()).hexdigest() == hashed
+    return pwd_context.verify(plain, hashed)
 
 
 def _seed_admin():
@@ -26,9 +28,10 @@ def _seed_admin():
     try:
         exists = db.query(AdminUser).filter(AdminUser.username == "admin").first()
         if not exists:
+            default_pw = os.getenv("ADMIN_DEFAULT_PASSWORD", "changeme")
             admin = AdminUser(
                 username="admin",
-                hashed_password=_hash_password("admin123"),
+                hashed_password=_hash_password(default_pw),
                 role="admin",
             )
             db.add(admin)
@@ -52,9 +55,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
