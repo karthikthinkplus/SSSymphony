@@ -14,9 +14,46 @@ if (-not $account) {
     exit 1
 }
 
-$project = gcloud config get-value core/project
-if ($project -ne "symphony-adaptive") {
-    Write-Host "Setting active project to 'symphony-adaptive'..." -ForegroundColor Yellow
+Write-Host "`nChecking if GCP project 'symphony-adaptive' exists..." -ForegroundColor Cyan
+$projectExists = $false
+$check = gcloud projects list --filter="projectId=symphony-adaptive" --format="value(projectId)" 2>$null
+if ($check -eq "symphony-adaptive") {
+    $projectExists = $true
+}
+
+if (-not $projectExists) {
+    Write-Host "Project 'symphony-adaptive' was not found in your GCP account." -ForegroundColor Yellow
+    $createProj = Read-Host "Would you like this script to create it now? (y/n)"
+    if ($createProj -eq 'y' -or $createProj -eq 'yes') {
+        $orgId = Read-Host "Enter your GCP Organization ID (optional, press Enter to skip)"
+        $folderId = ""
+        if (-not $orgId) {
+            $folderId = Read-Host "Enter your GCP Folder ID (optional, press Enter to skip)"
+        }
+        
+        Write-Host "`nCreating project 'symphony-adaptive'..." -ForegroundColor Yellow
+        if ($orgId) {
+            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math" --organization=$orgId
+        } elseif ($folderId) {
+            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math" --folder=$folderId
+        } else {
+            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math"
+        }
+        
+        Write-Host "Setting active project to 'symphony-adaptive'..." -ForegroundColor Yellow
+        gcloud config set project symphony-adaptive
+        
+        Write-Host "`n[IMPORTANT] You must link a billing account to the new project before proceeding." -ForegroundColor Cyan
+        Write-Host "Please do the following:" -ForegroundColor Cyan
+        Write-Host "1. Go to: https://console.cloud.google.com/billing" -ForegroundColor Cyan
+        Write-Host "2. Link your billing account to the project 'symphony-adaptive'." -ForegroundColor Cyan
+        Read-Host "Press Enter once the billing account is linked to continue..."
+    } else {
+        Write-Host "ERROR: Project 'symphony-adaptive' does not exist. Please create it or set it as active." -ForegroundColor Red
+        exit 1
+    }
+} else {
+    Write-Host "Project 'symphony-adaptive' found. Setting active project..." -ForegroundColor Green
     gcloud config set project symphony-adaptive
 }
 
@@ -31,7 +68,7 @@ try {
       artifactregistry.googleapis.com
     Write-Host "   [SUCCESS] APIs enabled successfully." -ForegroundColor Green
 } catch {
-    Write-Host "ERROR: Failed to enable APIs. Make sure a billing/payment account is linked to the project '$project'." -ForegroundColor Red
+    Write-Host "ERROR: Failed to enable APIs. Make sure a billing/payment account is linked to the project 'symphony-adaptive'." -ForegroundColor Red
     exit 1
 }
 

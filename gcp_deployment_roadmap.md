@@ -180,11 +180,74 @@ docker run -p 3000:3000 symphony-frontend
 
 ## Day 3 — GCP Project + Cloud SQL + Secret Manager
 
-### 3.1 — Create GCP Project
+### 3.1 — Enterprise Onboarding & Folder Setup
 
+To set up the project securely under your company’s ownership, follow this structured workflow to create the organization, configure the team directory, nest the project under a folder, and attach the billing account.
+
+#### A. Set up the GCP Organization
+1. Go to the [Google Cloud Identity Sign-up page](https://cloud.google.com/identity) (or use your existing Google Workspace console).
+2. Complete domain verification for your company domain (e.g., `company.com`).
+3. Once verified, Google Cloud automatically creates your root **Organization** resource.
+4. Retrieve your Organization ID by running:
+   ```bash
+   gcloud organizations list
+   ```
+   *Note the `ORGANIZATION_ID` matching your domain.*
+
+#### B. Add Team Members (Founder, Teammates, and You)
+Add all team members to the organization to grant permissions:
+1. Log into the Google Admin Console (`admin.google.com`) or Cloud Identity Admin.
+2. Go to **Directory > Users > Add new user**.
+3. Create accounts for:
+   *   The Founder
+   *   Teammates
+   *   Your professional email
+4. Assign team permissions in the GCP console (**IAM & Admin > IAM**):
+   *   Grant the Founder/Admins the **Organization Administrator** and **Billing Account Administrator** roles.
+   *   Grant yourself and core developers the **Project Creator** and **Folder Creator** roles at the organization level.
+
+#### C. Create a Folder for the Project
+Create a Folder under your organization to isolate and group Symphony resources:
 ```bash
-gcloud projects create symphony-adaptive --name="Symphony Adaptive Math"
+gcloud resource-manager folders create \
+  --display-name="Symphony-Project" \
+  --organization=YOUR_ORGANIZATION_ID
+```
+*Note the generated `FOLDER_ID` from the command output.* (You can also find this in **IAM & Admin > Manage Resources** in the GCP Console).
+
+#### D. Link or Create the Project inside the Folder
+Depending on whether you are reusing the existing project or starting fresh:
+
+*   **Option 1: Move the existing project into the Folder** (retains settings/names):
+    ```bash
+    gcloud beta projects move symphony-adaptive --folder=YOUR_FOLDER_ID
+    ```
+*   **Option 2: Create a brand new project directly in the Folder** (if starting fresh):
+    ```bash
+    gcloud projects create symphony-adaptive \
+      --name="Symphony Adaptive Math" \
+      --folder=YOUR_FOLDER_ID
+    ```
+
+#### E. Link the Billing Account
+A billing account must be attached to the project to enable SQL and Cloud Run.
+1. Find your Billing Account ID:
+   ```bash
+   gcloud billing accounts list
+   ```
+2. Link the billing account to your project:
+   ```bash
+   gcloud billing projects link symphony-adaptive \
+     --billing-account=YOUR_BILLING_ACCOUNT_ID
+   ```
+
+#### F. Enable Services
+Configure active project and enable required APIs:
+```bash
+# Ensure gcloud is targeting the correct project ID
 gcloud config set project symphony-adaptive
+
+# Enable services
 gcloud services enable \
   run.googleapis.com \
   sqladmin.googleapis.com \
@@ -378,6 +441,7 @@ Create `cloudbuild.yaml`:
 steps:
   # --- Backend ---
   - name: 'gcr.io/cloud-builders/docker'
+
     args:
       - build
       - -t

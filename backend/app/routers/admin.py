@@ -42,8 +42,13 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 480
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/admin/login")
 
 
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
 def verify_password(plain: str, hashed: str) -> bool:
-    return hashlib.sha256(plain.encode()).hexdigest() == hashed
+    return pwd_context.verify(plain, hashed)
 
 
 def create_access_token(data: dict):
