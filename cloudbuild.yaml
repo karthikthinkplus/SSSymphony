@@ -21,14 +21,17 @@ steps:
       - --platform=managed
 
   # --- Frontend ---
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
     args:
-      - build
-      - --build-arg
-      - 'NEXT_PUBLIC_API_URL=https://symphony-backend-HASH-uc.a.run.app'
-      - -t
-      - 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA'
-      - ./frontend
+      - '-c'
+      - |
+        BACKEND_URL=$(gcloud run services describe symphony-backend --region=asia-south1 --format='value(status.url)')
+        echo "Detected backend URL: $BACKEND_URL"
+        docker build \
+          --build-arg NEXT_PUBLIC_API_URL=$BACKEND_URL \
+          -t 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA' \
+          ./frontend
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/symphony-repo/frontend:$SHORT_SHA']
