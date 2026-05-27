@@ -25,20 +25,8 @@ if (-not $projectExists) {
     Write-Host "Project 'symphony-adaptive' was not found in your GCP account." -ForegroundColor Yellow
     $createProj = Read-Host "Would you like this script to create it now? (y/n)"
     if ($createProj -eq 'y' -or $createProj -eq 'yes') {
-        $orgId = Read-Host "Enter your GCP Organization ID (optional, press Enter to skip)"
-        $folderId = ""
-        if (-not $orgId) {
-            $folderId = Read-Host "Enter your GCP Folder ID (optional, press Enter to skip)"
-        }
-        
         Write-Host "`nCreating project 'symphony-adaptive'..." -ForegroundColor Yellow
-        if ($orgId) {
-            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math" --organization=$orgId
-        } elseif ($folderId) {
-            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math" --folder=$folderId
-        } else {
-            gcloud projects create symphony-adaptive --name="Symphony Adaptive Math"
-        }
+        gcloud projects create symphony-adaptive --name="Symphony Adaptive Math"
         
         Write-Host "Setting active project to 'symphony-adaptive'..." -ForegroundColor Yellow
         gcloud config set project symphony-adaptive
