@@ -76,8 +76,17 @@ def generate_report(db: DBSession, session_id: str) -> Dict[str, Any]:
     # -----------------------------------------------------------------------
     dim_names = ["dim_reading", "dim_understanding", "dim_application",
                  "dim_calculation", "dim_retention"]
-    dim_totals = {d: 0 for d in dim_names}
-    dim_correct = {d: 0 for d in dim_names}
+    
+    # Difficulty Weights (IRT proxy)
+    DIFFICULTY_WEIGHTS = {
+        "easy": 0.7,
+        "medium": 1.0,
+        "hard": 1.3
+    }
+    
+    # Accumulators for weighted score credit and total weighted question occurrences
+    weighted_credit = {d: 0.0 for d in dim_names}
+    weighted_total = {d: 0.0 for d in dim_names}
 
     for r in responses:
         q = db.query(Question).filter(Question.question_id == r.question_id).first()
@@ -88,18 +97,67 @@ def generate_report(db: DBSession, session_id: str) -> Dict[str, Any]:
         ).first()
         if not dims:
             continue
+
+        # Get the difficulty weight for the question (default to 1.0 if invalid)
+        diff_band = (q.difficulty_band or "medium").lower()
+        w_i = DIFFICULTY_WEIGHTS.get(diff_band, 1.0)
+
+        # Retrieve the trap type if incorrect
+        trap_type = r.trap_type
+
         for d in dim_names:
             if getattr(dims, d, False):
-                dim_totals[d] += 1
+                weighted_total[d] += w_i
+                
                 if r.is_correct:
-                    dim_correct[d] += 1
+                    # Full credit on correct answers
+                    weighted_credit[d] += 1.0 * w_i
+                else:
+                    # Partial / full credit allocation based on CDM error-trap attribution
+                    credit = 0.0
+                    if trap_type == "Reading_Error":
+                        if d == "dim_reading":
+                            credit = 0.0
+                        elif d in ["dim_understanding", "dim_calculation"]:
+                            credit = 1.0  # Perfect credit since math concepts and math logic are clean
+                        elif d in ["dim_application", "dim_retention"]:
+                            credit = 0.8  # Strong partial credit
+                    elif trap_type in ["Calculation_Error", "Sign_Error"]:
+                        if d == "dim_calculation":
+                            credit = 0.0
+                        elif d in ["dim_reading", "dim_understanding"]:
+                            credit = 1.0  # Perfect credit since understanding and reading are clean
+                        elif d in ["dim_application", "dim_retention"]:
+                            credit = 0.8  # Strong partial credit
+                    elif trap_type in ["Concept_Error", "Procedural_Error"]:
+                        if d in ["dim_understanding", "dim_application"]:
+                            credit = 0.0
+                        elif d in ["dim_reading", "dim_calculation", "dim_retention"]:
+                            credit = 0.8  # Strong partial credit (concept error doesn't fully deny these)
+                    elif trap_type == "Careless_Slip":
+                        if d == "dim_calculation":
+                            credit = 0.5  # execution slip
+                        else:
+                            credit = 0.9  # high credit as they know the concepts
+                    else:
+                        credit = 0.0  # fallback for other/unclassified errors
+
+                    weighted_credit[d] += credit * w_i
+
+    # Bayesian Shrinkage (Laplace smoothing)
+    # We use a virtual prior weight of 2.0 (equivalent to two medium questions)
+    # centered on the student's overall test accuracy (or 60% if no questions attempted)
+    w_prior = 2.0
+    prior_score_pct = accuracy if total_q > 0 else 60.0
+    prior_fraction = prior_score_pct / 100.0
 
     dimension_scores = {}
     for d in dim_names:
         key = d.replace("dim_", "")
-        dimension_scores[key] = round(
-            (dim_correct[d] / dim_totals[d] * 100) if dim_totals[d] > 0 else 0, 1
-        )
+        # Apply formula: (Sum(Credit * W) + W_prior * Prior) / (Sum(W) + W_prior) * 100
+        numerator = weighted_credit[d] + (w_prior * prior_fraction)
+        denominator = weighted_total[d] + w_prior
+        dimension_scores[key] = round((numerator / denominator) * 100.0, 1)
 
     # Save dimension scores to DB
     existing_ds = sess.dimension_scores

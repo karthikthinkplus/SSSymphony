@@ -187,7 +187,12 @@ export default function AssessmentPage() {
           </div>
 
           {/* Options */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 16,
+            marginBottom: 28
+          }}>
             {OPTIONS.map(opt => {
               const text = getOptionText(question, opt)
               if (!text) return null
