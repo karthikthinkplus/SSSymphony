@@ -1,0 +1,117 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_061: Internal Server Error'),2,2026-05-28T07:48:59Z,2026-05-28T07:49:08Z
+,,,,,
+GET,/api/session/report/4e2d7016-c4b3-4d33-9f45-cf704591ce41,CatchResponseError('Failed to load report for 4e2d7016-c4b3-4d33-9f45-cf704591ce41: Internal Server Error'),1,2026-05-28T07:49:09Z,2026-05-28T07:49:09Z
+,,,,,
+GET,/api/session/report/e89c353e-d07e-450c-915a-a1792261098f,CatchResponseError('Failed to load report for e89c353e-d07e-450c-915a-a1792261098f: Internal Server Error'),1,2026-05-28T07:49:13Z,2026-05-28T07:49:13Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_194: Internal Server Error'),1,2026-05-28T07:49:08Z,2026-05-28T07:49:08Z
+,,,,,
+GET,/api/session/report/19dc4336-2b3d-451c-a1fd-039e7ca4665f,CatchResponseError('Failed to load report for 19dc4336-2b3d-451c-a1fd-039e7ca4665f: Internal Server Error'),1,2026-05-28T07:49:11Z,2026-05-28T07:49:11Z
+,,,,,
+GET,/api/session/report/c0c3ee5e-081a-4cf6-b03c-e37b0af4ee7d,CatchResponseError('Failed to load report for c0c3ee5e-081a-4cf6-b03c-e37b0af4ee7d: Internal Server Error'),1,2026-05-28T07:49:13Z,2026-05-28T07:49:13Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_079: Internal Server Error'),7,2026-05-28T07:48:57Z,2026-05-28T07:49:13Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_010: Internal Server Error'),6,2026-05-28T07:49:02Z,2026-05-28T07:49:13Z
+,,,,,
+POST,/api/session/start,"CatchResponseError('Failed to start session: {""detail"":""No questions available for this grade""}')",88,2026-05-28T07:48:16Z,2026-05-28T07:49:14Z
+,,,,,
+GET,/api/session/report/4b44fe57-be8e-43c0-96d4-669af7668fd7,CatchResponseError('Failed to load report for 4b44fe57-be8e-43c0-96d4-669af7668fd7: Internal Server Error'),1,2026-05-28T07:49:14Z,2026-05-28T07:49:14Z
+,,,,,
+GET,/api/session/report/ca0eb0af-ae31-4f63-8fb4-53f4156bea4c,CatchResponseError('Failed to load report for ca0eb0af-ae31-4f63-8fb4-53f4156bea4c: Internal Server Error'),1,2026-05-28T07:48:58Z,2026-05-28T07:48:58Z
+,,,,,
+GET,/api/session/report/cb2e8b7c-a909-45b6-892d-c1292ff60cba,CatchResponseError('Failed to load report for cb2e8b7c-a909-45b6-892d-c1292ff60cba: Internal Server Error'),1,2026-05-28T07:49:12Z,2026-05-28T07:49:12Z
+,,,,,
+GET,/api/session/report/086194b6-31b2-41df-be78-9644e269e73b,CatchResponseError('Failed to load report for 086194b6-31b2-41df-be78-9644e269e73b: Internal Server Error'),1,2026-05-28T07:48:58Z,2026-05-28T07:48:58Z
+,,,,,
+GET,/api/session/report/8c16fbf4-fa03-4ffc-b7b7-2f1126f0ec47,CatchResponseError('Failed to load report for 8c16fbf4-fa03-4ffc-b7b7-2f1126f0ec47: Internal Server Error'),1,2026-05-28T07:48:59Z,2026-05-28T07:48:59Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_033: Internal Server Error'),5,2026-05-28T07:48:57Z,2026-05-28T07:49:12Z
+,,,,,
+GET,/api/session/report/d880f097-a5aa-4668-abda-8b514ed65e42,CatchResponseError('Failed to load report for d880f097-a5aa-4668-abda-8b514ed65e42: Internal Server Error'),1,2026-05-28T07:49:07Z,2026-05-28T07:49:07Z
+,,,,,
+GET,/api/session/report/6a9006a9-4541-4ffe-9473-dbb1796381ae,CatchResponseError('Failed to load report for 6a9006a9-4541-4ffe-9473-dbb1796381ae: Internal Server Error'),1,2026-05-28T07:49:02Z,2026-05-28T07:49:02Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_005: Internal Server Error'),7,2026-05-28T07:48:32Z,2026-05-28T07:49:13Z
+,,,,,
+GET,/api/session/report/e7c6db5e-4911-44ad-bff8-3a1e7a3f0079,CatchResponseError('Failed to load report for e7c6db5e-4911-44ad-bff8-3a1e7a3f0079: Internal Server Error'),1,2026-05-28T07:49:13Z,2026-05-28T07:49:13Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_064: Internal Server Error'),1,2026-05-28T07:48:56Z,2026-05-28T07:48:56Z
+,,,,,
+GET,/api/session/report/0636cf92-b753-478f-9c09-3afbdeda56d0,CatchResponseError('Failed to load report for 0636cf92-b753-478f-9c09-3afbdeda56d0: Internal Server Error'),1,2026-05-28T07:49:08Z,2026-05-28T07:49:08Z
+,,,,,
+GET,/api/session/report/c0b47256-f3ba-4100-9290-01b5a2c7f224,CatchResponseError('Failed to load report for c0b47256-f3ba-4100-9290-01b5a2c7f224: Internal Server Error'),1,2026-05-28T07:48:57Z,2026-05-28T07:48:57Z
+,,,,,
+GET,/api/session/report/14438e33-c729-4337-8b82-e64e1598cc01,CatchResponseError('Failed to load report for 14438e33-c729-4337-8b82-e64e1598cc01: Internal Server Error'),1,2026-05-28T07:49:09Z,2026-05-28T07:49:09Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_018: Internal Server Error'),5,2026-05-28T07:48:59Z,2026-05-28T07:49:14Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_146: Internal Server Error'),1,2026-05-28T07:48:58Z,2026-05-28T07:48:58Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_006: Internal Server Error'),4,2026-05-28T07:49:06Z,2026-05-28T07:49:10Z
+,,,,,
+GET,/api/session/report/a8cf03d1-c1ec-4532-ba93-92b505c52798,CatchResponseError('Failed to load report for a8cf03d1-c1ec-4532-ba93-92b505c52798: Internal Server Error'),1,2026-05-28T07:49:12Z,2026-05-28T07:49:12Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_002: Internal Server Error'),8,2026-05-28T07:48:55Z,2026-05-28T07:49:14Z
+,,,,,
+POST,/api/session/start,CatchResponseError('Failed to start session: Internal Server Error'),26,2026-05-28T07:48:56Z,2026-05-28T07:49:14Z
+,,,,,
+GET,/api/session/report/f54ad2a2-41c6-4566-bc81-293809c59cc7,CatchResponseError('Failed to load report for f54ad2a2-41c6-4566-bc81-293809c59cc7: Internal Server Error'),1,2026-05-28T07:48:59Z,2026-05-28T07:48:59Z
+,,,,,
+GET,/api/session/report/c64b67ef-bd5e-45b6-b89e-72ec4254aeee,CatchResponseError('Failed to load report for c64b67ef-bd5e-45b6-b89e-72ec4254aeee: Internal Server Error'),1,2026-05-28T07:49:09Z,2026-05-28T07:49:09Z
+,,,,,
+GET,/api/session/report/b163fe30-ddb1-481e-b5de-b878fa3f6f05,CatchResponseError('Failed to load report for b163fe30-ddb1-481e-b5de-b878fa3f6f05: Internal Server Error'),1,2026-05-28T07:49:07Z,2026-05-28T07:49:07Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_149: Internal Server Error'),1,2026-05-28T07:49:08Z,2026-05-28T07:49:08Z
+,,,,,
+GET,/api/session/report/e3d80680-a03b-4118-bcb0-668b554a2e00,CatchResponseError('Failed to load report for e3d80680-a03b-4118-bcb0-668b554a2e00: Internal Server Error'),1,2026-05-28T07:49:07Z,2026-05-28T07:49:07Z
+,,,,,
+GET,/api/session/report/28e21190-8f27-49db-a791-03d28729d1a1,CatchResponseError('Failed to load report for 28e21190-8f27-49db-a791-03d28729d1a1: Internal Server Error'),1,2026-05-28T07:48:59Z,2026-05-28T07:48:59Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_049: Internal Server Error'),6,2026-05-28T07:48:56Z,2026-05-28T07:49:11Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_145: Internal Server Error'),2,2026-05-28T07:48:45Z,2026-05-28T07:49:07Z
+,,,,,
+GET,/api/session/report/f1984b6a-8ec9-47f9-9a25-cd0c72a33306,CatchResponseError('Failed to load report for f1984b6a-8ec9-47f9-9a25-cd0c72a33306: Internal Server Error'),1,2026-05-28T07:49:06Z,2026-05-28T07:49:06Z
+,,,,,
+GET,/api/session/report/ed5ec035-a376-4a9c-8b3f-f0d2842d72a2,CatchResponseError('Failed to load report for ed5ec035-a376-4a9c-8b3f-f0d2842d72a2: Internal Server Error'),1,2026-05-28T07:48:57Z,2026-05-28T07:48:57Z
+,,,,,
+GET,/api/session/report/b1073f25-1d38-4590-bf97-2c6bbbca66c3,CatchResponseError('Failed to load report for b1073f25-1d38-4590-bf97-2c6bbbca66c3: Internal Server Error'),1,2026-05-28T07:48:56Z,2026-05-28T07:48:56Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_086: Internal Server Error'),4,2026-05-28T07:48:57Z,2026-05-28T07:49:09Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_216: Internal Server Error'),2,2026-05-28T07:49:02Z,2026-05-28T07:49:10Z
+,,,,,
+GET,/api/session/report/20f3ff98-589f-475d-9976-67696c0e1384,CatchResponseError('Failed to load report for 20f3ff98-589f-475d-9976-67696c0e1384: Internal Server Error'),1,2026-05-28T07:48:58Z,2026-05-28T07:48:58Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_007: Internal Server Error'),1,2026-05-28T07:48:58Z,2026-05-28T07:48:58Z
+,,,,,
+GET,/api/session/report/41a9cc28-35f4-4acb-9805-f6357cc76b9c,CatchResponseError('Failed to load report for 41a9cc28-35f4-4acb-9805-f6357cc76b9c: Internal Server Error'),1,2026-05-28T07:49:07Z,2026-05-28T07:49:07Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_011: Internal Server Error'),1,2026-05-28T07:48:59Z,2026-05-28T07:48:59Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_037: Internal Server Error'),1,2026-05-28T07:49:08Z,2026-05-28T07:49:08Z
+,,,,,
+GET,/api/session/report/007b710a-6814-4fad-abae-00f1235b59d4,CatchResponseError('Failed to load report for 007b710a-6814-4fad-abae-00f1235b59d4: Internal Server Error'),1,2026-05-28T07:49:09Z,2026-05-28T07:49:09Z
+,,,,,
+GET,/api/session/report/901a812c-5c21-425a-8593-3f0bc143d9e0,CatchResponseError('Failed to load report for 901a812c-5c21-425a-8593-3f0bc143d9e0: Internal Server Error'),1,2026-05-28T07:49:02Z,2026-05-28T07:49:02Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_027: Internal Server Error'),2,2026-05-28T07:49:12Z,2026-05-28T07:49:13Z
+,,,,,
+GET,/api/session/report/2868a872-b8c4-4903-8797-728fdcc26611,CatchResponseError('Failed to load report for 2868a872-b8c4-4903-8797-728fdcc26611: Internal Server Error'),1,2026-05-28T07:49:09Z,2026-05-28T07:49:09Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_003: Internal Server Error'),4,2026-05-28T07:49:00Z,2026-05-28T07:49:10Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_001: Internal Server Error'),12,2026-05-28T07:48:55Z,2026-05-28T07:49:12Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_021: Internal Server Error'),2,2026-05-28T07:48:59Z,2026-05-28T07:49:08Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_141: Internal Server Error'),1,2026-05-28T07:48:59Z,2026-05-28T07:48:59Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_028: Internal Server Error'),1,2026-05-28T07:49:01Z,2026-05-28T07:49:01Z
+,,,,,
+POST,/api/session/respond,CatchResponseError('Failed response for Q#Q_004: Internal Server Error'),4,2026-05-28T07:48:56Z,2026-05-28T07:49:12Z
+,,,,,
+GET,/api/session/report/12f6845d-8039-4936-9357-52b876a4ce92,CatchResponseError('Failed to load report for 12f6845d-8039-4936-9357-52b876a4ce92: Internal Server Error'),1,2026-05-28T07:48:39Z,2026-05-28T07:48:39Z
